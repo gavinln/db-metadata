@@ -1,0 +1,17 @@
+session_name: db-metadata
+start_directory: "."
+windows:
+- window_name: edit-run
+  layout: even-vertical
+  focus: true
+  shell_command_before:
+    - echo initial command
+  panes:
+    - shell_command: echo "starting pane"
+      focus: true
+    - shell_command: echo "starting other pane"
+- window_name: git
+  layout: even-vertical
+  panes:
+    - shell_command: echo "started shell"
+    - vifm .

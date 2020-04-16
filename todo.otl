@@ -1,0 +1,18 @@
+Sqlite
+	No schema, no catalog
+	Can be implemented
+		[_] in pandas
+		[_] in database
+			[_] use ibis-framework
+			[_] use sqlalchemy
+			[_] use sql statements
+	List of tables - series of table names
+	List of columns for selected table - series of column names for table
+	Number of null values
+		All rows
+		Random n rows
+		n rows sorted by column asc/desc
+Presto
+
+Postgres
+
