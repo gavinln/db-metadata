@@ -11,5 +11,8 @@ connect:  ## connect to gavinsvr
 jupyter-nb:  ## start jupyter notebook
 	bash $(SCRIPT_DIR)/scripts/jupyter-nb.sh
 
+sqlite_list_tables:
+	pipenv run python python/sqlite_metadata.py list
+
 tmux:  ## start tmux
 	tmuxp load tmux.yaml

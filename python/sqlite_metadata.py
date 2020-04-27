@@ -1,3 +1,12 @@
+'''
+python sqlite_metadata.py list tables
+python sqlite_metadata.py list columns employee
+python sqlite_metadata.py count rows employee
+python sqlite_metadata.py count values employee lastname
+python sqlite_metadata.py count distinct employee lastname
+python sqlite_metadata.py count null employee reportsto
+
+'''
 import logging
 import pathlib
 import sqlite3
@@ -104,6 +113,41 @@ def get_table_columns(table_name):
     return df
 
 
+def get_count_null(table_name, column_name):
+    sql = '''
+        select count(*) as count_null from {} where {} is null
+    '''.format(table_name, column_name)
+    return get_sql_df(sql)
+
+
+def get_count_rows(table_name):
+    sql = '''
+        select count(*) as count_rows from {}
+    '''.format(table_name)
+    return get_sql_df(sql)
+
+
+def get_count_distinct(table_name, column_name):
+    sql = '''
+        with distinct_values as (
+            select distinct({}) as count_distinct from {}
+        )
+        select count(*) as count_distinct
+        from distinct_values
+    '''.format(column_name, table_name)
+    return get_sql_df(sql)
+
+
+def get_count_values(table_name, column_name):
+    sql = '''
+        select {col_name} as name, count({col_name}) as counts
+        from {tbl_name}
+        group by {col_name}
+        order by count({col_name}) desc
+    '''.format(col_name=column_name, tbl_name=table_name)
+    return get_sql_df(sql)
+
+
 def get_table_names():
     df = get_table_list()
     return df.name.to_list()
@@ -148,11 +192,113 @@ def column_fn(name, col_name=None):
             embed()
 
 
+class CountCommand:
+
+    def null(self, table_name, column_name):
+        ''' count the number of null values
+        '''
+        df = get_count_null(table_name, column_name)
+        print(df)
+
+
+    def rows(self, table_name):
+        ''' count the number of rows in a table
+        '''
+        df = get_count_rows(table_name)
+        print(df)
+
+    def distinct(self, table_name, column_name):
+        ''' count the number of distinct values (including nulls)
+        '''
+        df = get_count_distinct(table_name, column_name)
+        print(df)
+
+    def dtypes(self, table_name):
+        ''' count the number of datatypes for a table
+
+            e.g. 6 int, 3 boolean
+        '''
+        assert False
+
+    def values(self, table_name, column_name):
+        ''' count the number of unique values for a column
+
+            e.g. 3 apples, 2 bananas
+        '''
+        df = get_count_values(table_name, column_name)
+        print(df)
+
+    def equal_columns(self, table_name1, column_name1,
+                      table_name2, column_name2):
+        ''' counts the number of equal rows in two columns
+        '''
+        assert False
+
+    def identical_all_columns(self, table_name1, column_name1,
+                              table_name2, column_name2):
+        ''' return true if all values in two columns are identical
+        '''
+        assert False
+
+    def identical_not_null_columns(self, table_name1, column_name1,
+                                   table_name2, column_name2):
+        ''' return true if all not null values in two columns are identical
+        '''
+        assert False
+
+
+class ListCommand:
+
+    def tables(self):
+        ''' list tables in the database
+        '''
+        df = get_table_list()
+        print(df.name)
+
+    def columns(self, table_name):
+        ''' list columns of a table
+        '''
+        df = get_table_columns(table_name)
+        print(df)
+
+
+class DescribeCommand:
+
+    def column(self, table_name, column_name):
+        ''' describe a single column in a table
+
+            For a boolean column
+                number
+                    * null
+                    * true
+                    * false
+            For a numeric column
+                number of null values
+                minimum
+                mean
+                maximum
+                stdev
+            For a string column
+                number of null values
+                minimum length of string
+                mean length of string
+                maximum length of string
+                stdev of length of string
+        '''
+        assert False
+
+
+class GroupCommand:
+    ''' display metadata from the sqlite database
+    '''
+    def __init__(self):
+        self.list = ListCommand()
+        self.count = CountCommand()
+        self.describe = DescribeCommand()
+
+
 def main():
-    fire.Fire({
-        'list': table_fn,
-        'details': column_fn
-    })
+    fire.Fire(GroupCommand)
 
 
 if __name__ == "__main__":

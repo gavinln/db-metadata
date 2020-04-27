@@ -19,5 +19,21 @@ Python command line utility to get metadata about a database such as
 * Number of unique values
 * Counts of unique values
 
+## Run program
+
+1. Start Linux
+
+```
+win-linux.bat
+```
+
+2. Start Python environment
+
+```
+pipenv shell
+```
+
+3.
+
 ## Links
 
