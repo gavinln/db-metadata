@@ -194,31 +194,11 @@ def column_fn(name, col_name=None):
 
 class CountCommand:
 
-    def null(self, table_name, column_name):
-        ''' count the number of null values
-        '''
-        df = get_count_null(table_name, column_name)
-        print(df)
-
-
     def rows(self, table_name):
         ''' count the number of rows in a table
         '''
         df = get_count_rows(table_name)
         print(df)
-
-    def distinct(self, table_name, column_name):
-        ''' count the number of distinct values (including nulls)
-        '''
-        df = get_count_distinct(table_name, column_name)
-        print(df)
-
-    def dtypes(self, table_name):
-        ''' count the number of datatypes for a table
-
-            e.g. 6 int, 3 boolean
-        '''
-        assert False
 
     def values(self, table_name, column_name):
         ''' count the number of unique values for a column
@@ -228,21 +208,30 @@ class CountCommand:
         df = get_count_values(table_name, column_name)
         print(df)
 
+    def distinct(self, table_name, column_name):
+        ''' count the number of distinct values (including nulls)
+        '''
+        df = get_count_distinct(table_name, column_name)
+        print(df)
+
+    def null(self, table_name, column_name):
+        ''' count the number of null values
+        '''
+        df = get_count_null(table_name, column_name)
+        print(df)
+
+    def dtypes(self, table_name):
+        ''' count the number of datatypes for a table
+
+            e.g. 6 int, 3 boolean
+        '''
+        df = get_table_columns(table_name)
+        dtypes_df = df.type.value_counts().to_frame('count')
+        print(dtypes_df)
+
     def equal_columns(self, table_name1, column_name1,
-                      table_name2, column_name2):
+                      column_name2):
         ''' counts the number of equal rows in two columns
-        '''
-        assert False
-
-    def identical_all_columns(self, table_name1, column_name1,
-                              table_name2, column_name2):
-        ''' return true if all values in two columns are identical
-        '''
-        assert False
-
-    def identical_not_null_columns(self, table_name1, column_name1,
-                                   table_name2, column_name2):
-        ''' return true if all not null values in two columns are identical
         '''
         assert False
 

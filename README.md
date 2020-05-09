@@ -33,7 +33,8 @@ win-linux.bat
 pipenv shell
 ```
 
-3.
+3. Run the program
+python python/sqlite_metadata.py
 
 ## Links
 
